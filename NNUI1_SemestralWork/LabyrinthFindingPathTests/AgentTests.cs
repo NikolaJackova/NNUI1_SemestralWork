@@ -8,46 +8,46 @@ namespace LabyrinthFindingPathTests
     public class AgentTests
     {
         [TestMethod]
-        public void RotateAgent180DegreesNorthToSouth()
+        public void Rotate180DegreesNorthToSouth()
         {
-            Agent agent = new Agent(0, 0);
-            agent.Rotate180Degrees();
-            Assert.AreEqual(Direction.SOUTH, agent.Direction);
+            Position position = new Position(0, 0, Direction.NORTH);
+            position.Rotate180Degrees();
+            Assert.AreEqual(Direction.SOUTH, position.Direction);
         }
         [TestMethod]
-        public void RotateAgent180DegreesEastToWest()
+        public void Rotate180DegreesEastToWest()
         {
-            Agent agent = new Agent(0, 0, Direction.EAST);
-            agent.Rotate180Degrees();
-            Assert.AreEqual(Direction.WEST, agent.Direction);
+            Position position = new Position(0, 0, Direction.EAST);
+            position.Rotate180Degrees();
+            Assert.AreEqual(Direction.WEST, position.Direction);
         }
         [TestMethod]
-        public void RotateAgent90DegreesRightNorthToEast()
+        public void Rotate90DegreesRightNorthToEast()
         {
-            Agent agent = new Agent(0, 0);
-            agent.Rotate90DegreesRight();
-            Assert.AreEqual(Direction.EAST, agent.Direction);
+            Position position = new Position(0, 0, Direction.NORTH);
+            position.Rotate90DegreesRight();
+            Assert.AreEqual(Direction.EAST, position.Direction);
         }
         [TestMethod]
-        public void RotateAgent90DegreesRightWestToNorth()
+        public void Rotate90DegreesRightWestToNorth()
         {
-            Agent agent = new Agent(0, 0, Direction.WEST);
-            agent.Rotate90DegreesRight();
-            Assert.AreEqual(Direction.NORTH, agent.Direction);
+            Position position = new Position(0, 0, Direction.WEST);
+            position.Rotate90DegreesRight();
+            Assert.AreEqual(Direction.NORTH, position.Direction);
         }
         [TestMethod]
-        public void RotateAgent90DegreesLeftNorthToWest()
+        public void Rotate90DegreesLeftNorthToWest()
         {
-            Agent agent = new Agent(0, 0);
-            agent.Rotate90DegreesLeft();
-            Assert.AreEqual(Direction.WEST, agent.Direction);
+            Position position = new Position(0, 0, Direction.NORTH);
+            position.Rotate90DegreesLeft();
+            Assert.AreEqual(Direction.WEST, position.Direction);
         }
         [TestMethod]
-        public void RotateAgent90DegreesLeftWestToSouth()
+        public void Rotate90DegreesLeftWestToSouth()
         {
-            Agent agent = new Agent(0, 0, Direction.WEST);
-            agent.Rotate90DegreesLeft();
-            Assert.AreEqual(Direction.SOUTH, agent.Direction);
+            Position position = new Position(0, 0, Direction.WEST);
+            position.Rotate90DegreesLeft();
+            Assert.AreEqual(Direction.SOUTH, position.Direction);
         }
     }
 }

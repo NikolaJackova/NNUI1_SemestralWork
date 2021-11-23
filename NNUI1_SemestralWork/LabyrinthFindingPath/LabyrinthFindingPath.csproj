@@ -48,7 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agent.cs" />
-    <Compile Include="AStarSearch.cs" />
+    <Compile Include="Position.cs" />
+    <Compile Include="Search\Action.cs" />
+    <Compile Include="Search\AStarNode.cs" />
+    <Compile Include="Search\AStarSearch.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="Labyrinth.cs" />
     <Compile Include="LabyrinthException.cs" />
@@ -60,6 +63,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Search\SearchException.cs" />
+    <Compile Include="Search\SearchSystemController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
