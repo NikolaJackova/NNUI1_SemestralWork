@@ -46,7 +46,7 @@ namespace LabyrinthFindingPath.Search
                 }
                 iteration++;
             }
-            return null;
+            throw new LabyrinthException("Unreachable position!");
         }
     }
 }

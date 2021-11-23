@@ -6,17 +6,35 @@ using System.Threading.Tasks;
 
 namespace LabyrinthFindingPath
 {
-    public struct Position
+    public class Position
     {
         public int Row { get; set; }
         public int Column { get; set; }
         public Direction Direction { get; set; }
 
-        public Position(int row, int column, Direction direction)
+        public Position(int row, int column, Direction direction = default)
         {
             Row = row;
             Column = column;
             Direction = direction;
+        }
+        public Position(Position position)
+        {
+            Row = position.Row;
+            Column = position.Column;
+            Direction = position.Direction;
+        }
+        public bool Equals(Position position)
+        {
+            return Row == position.Row && Column == position.Column && Direction == position.Direction;
+        }
+        public bool EqualsCoordinates(Position position)
+        {
+            return Row == position.Row && Column == position.Column;
+        }
+        public override string ToString()
+        {
+            return "[" + Row + ", " + Column + "], " + Direction;
         }
         public void StepForward()
         {

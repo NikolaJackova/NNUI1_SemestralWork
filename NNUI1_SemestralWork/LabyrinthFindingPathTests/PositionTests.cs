@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LabyrinthFindingPathTests
 {
     [TestClass]
-    public class AgentTests
+    public class PositionTests
     {
         [TestMethod]
         public void Rotate180DegreesNorthToSouth()

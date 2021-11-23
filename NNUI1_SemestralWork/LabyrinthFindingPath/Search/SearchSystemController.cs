@@ -22,7 +22,7 @@ namespace LabyrinthFindingPath.Search
         }
         public bool IsFinalState(AStarNode node)
         {
-            return FinalPosition.Equals(node.Position);
+            return FinalPosition.EqualsCoordinates(node.Position);
         }
         public bool IsValidAction(Action action, Position position)
         {
