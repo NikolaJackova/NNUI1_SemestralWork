@@ -13,9 +13,9 @@ namespace LabyrinthFindingPath
         public static int CostOfRotate180 { get; set; }
         public static int CostOfStepForward { get; set; }
 
-        public Agent(int row, int column, Direction direction = Direction.NORTH)
+        public Agent(Position position)
         {
-            Position = new Position(row, column, direction);
+            Position = position;
             CostOfRotate90 = 2;
             CostOfRotate180 = 3;
             CostOfStepForward = 5;

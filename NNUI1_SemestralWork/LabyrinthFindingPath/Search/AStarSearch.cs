@@ -7,46 +7,74 @@ namespace LabyrinthFindingPath.Search
 {
     class AStarSearch
     {
-        public SearchSystemController AStarSearchSystem { get; set; }
-        public SimplePriorityQueue<AStarNode> Fringe { get; set; }
-        public AStarNode InitNode { get; set; }
-        public IList<AStarNode> Explored { get; set; }
+        public Labyrinth Labyrinth { get; }
+        public Position StartPositioin { get; set; }
+        public Position FinalPosition { get; set; }
+        private SearchActionProcessor AStarSystemActionProcessor { get; }
+        private SimplePriorityQueue<AStarNode> Fringe { get; }
+        private IList<AStarNode> Explored { get; }
 
-        public AStarSearch(AStarNode initNode, Position finalPosition, Labyrinth labyrinth)
+        public AStarSearch(Labyrinth labyrinth, Position finalPosition)
         {
-            AStarSearchSystem = new SearchSystemController(finalPosition, labyrinth);
-            InitNode = initNode;
+            AStarSystemActionProcessor = new SearchActionProcessor(labyrinth);
             Fringe = new SimplePriorityQueue<AStarNode>();
             Explored = new List<AStarNode>();
+            StartPositioin = labyrinth.Agent.Position;
+            FinalPosition = finalPosition;
+            Labyrinth = labyrinth;
         }
-
-        public Stack<AStarNode> Search(out int iteration)
+        public Stack<AStarNode> SearchPath(out int iteration)
         {
             iteration = 0;
-            Fringe.Enqueue(InitNode, InitNode.PathTotal);
+            Fringe.Enqueue(new AStarNode(StartPositioin), 0);
             while (Fringe.Count != 0)
             {
                 AStarNode node = Fringe.Dequeue();
                 Explored.Add(node);
-                IList<AStarNode> children = AStarSearchSystem.Successor(node);
-                foreach (var item in children)
+                ProcessChildrenNodes(AStarSystemActionProcessor.Successor(node));
+                if (FinalPosition.EqualsCoordinates(node.Position))
                 {
-                    if (!Explored.Any(nodeInCollection => item.Equals(nodeInCollection)) && !Fringe.Any(nodeInCollection => item.Equals(nodeInCollection)))
-                    {
-                        AStarSearchSystem.EvaluateNodeWithHeuristic(item);
-                        Fringe.Enqueue(item, item.PathTotal);
-                    }
-                }
-                if (AStarSearchSystem.IsFinalState(node))
-                {
-                    AStarSearchSystem.EvaluateNodeWithHeuristic(node);
+                    node.PathEval = EvaluateWithHeuristic(node.Position);
                     Stack<AStarNode> aStarNodePath = new Stack<AStarNode>();
-                    AStarSearchSystem.ReconstructPath(node, aStarNodePath);
+                    ReconstructPath(node, aStarNodePath);
+                    ApplyPathOnAgent(aStarNodePath);
                     return aStarNodePath;
                 }
                 iteration++;
             }
-            throw new LabyrinthException("Unreachable position!");
+            throw new SearchException("Unreachable position!");
+        }
+        private void ApplyPathOnAgent(Stack<AStarNode> aStarNodePath)
+        {
+            foreach (var item in aStarNodePath)
+            {
+                Labyrinth.Agent.Position = item.Position;
+            }
+        }
+        private void ProcessChildrenNodes(IList<AStarNode> children)
+        {
+            foreach (var childNode in children)
+            {
+                if (!Explored.Any(nodeInCollection => childNode.Equals(nodeInCollection)) && !Fringe.Any(nodeInCollection => childNode.Equals(nodeInCollection)))
+                {
+                    childNode.PathEval = EvaluateWithHeuristic(childNode.Position);
+                    Fringe.Enqueue(childNode, childNode.PathTotal);
+                }
+            }
+        }
+        private int EvaluateWithHeuristic(Position position)
+        {
+            return Math.Abs(position.Row - FinalPosition.Row) + Math.Abs(position.Column - FinalPosition.Column);
+        }
+        private void ReconstructPath(AStarNode node, Stack<AStarNode> path)
+        {
+            Labyrinth.Agent.Position = node.Position;
+            path.Push(node);
+            if (node.Parent == null)
+            {
+                return;
+            }
+            ReconstructPath(node.Parent, path);
         }
     }
 }

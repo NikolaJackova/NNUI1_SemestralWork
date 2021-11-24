@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 
 namespace LabyrinthFindingPath
 {
-    class Labyrinth
+    public class Labyrinth
     {
         private LoaderLabyrinth LoaderLabyrinth { get; }
-        public bool[,] LabyrinthMap { get; set; }
+        public bool[,] LabyrinthMap { get; }
         public int Rows { get; private set; }
         public int Columns { get; private set; }
         public Agent Agent { get; set; }
-        public int[] DestinationPosition { get; set; } 
-        public Labyrinth(Bitmap image, int[] startPosition, int[] destinationPosition)
+        public Labyrinth(Bitmap image, Position startPosition)
         {
             LoaderLabyrinth = new LoaderLabyrinth(image);
-            Load();
-            SetAttributes(startPosition, destinationPosition);
+            LabyrinthMap = LoaderLabyrinth.LoadLabyrinth();
+            SetAttributes(startPosition);
         }
         public override string ToString()
         {
@@ -34,29 +33,20 @@ namespace LabyrinthFindingPath
             }
             return builder.ToString();
         }
-        private void Load()
+        private void SetAttributes(Position startPosition)
         {
-            LabyrinthMap = LoaderLabyrinth.LoadLabyrinth();
-        }
-        private void SetAttributes(int[] startPosition, int[] destinationPosition)
-        {
-            if (!CheckValidPosition(startPosition) || !CheckValidPosition(destinationPosition))
+            if (!CheckValidPosition(startPosition))
             {
                 throw new LabyrinthException("Start or destination position is not valid position!");
             }
-            Agent = new Agent(startPosition[0], startPosition[1]);
-            DestinationPosition = destinationPosition;
+            Agent = new Agent(startPosition);
             Rows = LabyrinthMap.GetLength(0);
             Columns = LabyrinthMap.GetLength(1);
         }
 
-        private bool CheckValidPosition(int[] position)
+        private bool CheckValidPosition(Position position)
         {
-            if (LabyrinthMap[position[0], position[1]] == false)
-            {
-                return false;
-            }
-            return true;
+            return LabyrinthMap[position.Row, position.Column] != false;
         }
     }
 }

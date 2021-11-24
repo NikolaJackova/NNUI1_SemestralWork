@@ -49,5 +49,37 @@ namespace LabyrinthFindingPathTests
             position.Rotate90DegreesLeft();
             Assert.AreEqual(Direction.SOUTH, position.Direction);
         }
+        [TestMethod]
+        public void StepForwardToNorth()
+        {
+            Position position = new Position(2, 1, Direction.NORTH);
+            position.StepForward();
+            Position expectedPosition = new Position(1, 1, Direction.NORTH);
+            Assert.AreEqual(true, position.Equals(expectedPosition));
+        }
+        [TestMethod]
+        public void StepForwardToEast()
+        {
+            Position position = new Position(1, 1, Direction.EAST);
+            position.StepForward();
+            Position expectedPosition = new Position(1, 2, Direction.EAST);
+            Assert.AreEqual(true, position.Equals(expectedPosition));
+        }
+        [TestMethod]
+        public void StepForwardToSouth()
+        {
+            Position position = new Position(1, 1, Direction.SOUTH);
+            position.StepForward();
+            Position expectedPosition = new Position(2, 1, Direction.SOUTH);
+            Assert.AreEqual(true, position.Equals(expectedPosition));
+        }
+        [TestMethod]
+        public void StepForwardToWest()
+        {
+            Position position = new Position(1, 2, Direction.WEST);
+            position.StepForward();
+            Position expectedPosition = new Position(1, 1, Direction.WEST);
+            Assert.AreEqual(true, position.Equals(expectedPosition));
+        }
     }
 }

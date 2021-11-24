@@ -9,37 +9,38 @@ namespace LabyrinthFindingPath.Search
     class AStarNode
     {
         private static int id = 1;
-        public int Id { get; set; }
-        public AStarNode Parent { get; set; }
-        public Action? Action { get; set; }
-        public Position Position { get; set; }
-        public int Depth { get; set; }
+        public int Id { get; }
+        public AStarNode Parent { get; }
+        public Action? Action { get; }
+        public Position Position { get; }
+        public int Depth { get; }
         public int PathEval { get; set; }
         public int PathCost { get; set; }
         public int PathTotal { get { return PathCost + PathEval; } }
-        public AStarNode(AStarNode parent, Position position, Action? action, int depth)
+        public AStarNode(Position position)
         {
             Id = id++;
-            Parent = parent;
             Position = position;
-            Action = action;
-            Depth = depth;
+            Parent = null;
+            Action = null;
+            Depth = 0;
         }
-        public AStarNode(AStarNode node)
+        public AStarNode(AStarNode node, Action? action)
         {
             Id = id++;
             Parent = node;
             Position = new Position(node.Position);
             Depth = node.Depth + 1;
+            Action = action;
+            PathCost = node.PathCost;
         }
-
         public bool Equals(AStarNode node)
         {
             return Position.Equals(node.Position);
         }
         public override string ToString()
         {
-            return Action + " " + Position.ToString();
+            return "{" + Action + ": " + Position.ToString() + "\n" + "Path eval: " + PathEval + ", path cost: " + PathCost + ", path total: " + PathTotal + "}";
         }
     }
 }

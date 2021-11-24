@@ -18,13 +18,13 @@ namespace LabyrinthFindingPath
         }
         static void Main(string[] args)
         {
-            Labyrinth l = new Labyrinth(Properties.Resources.Bludiste1, new int[] { 1,1}, new int[] {1,3});
-            Search.AStarSearch aStar = new Search.AStarSearch(new Search.AStarNode(null, new Position(1, 1, Direction.NORTH), null, 0), new Position(1, 20), l);
-            Stack<Search.AStarNode> path = aStar.Search(out int iteration);
+            Labyrinth lab = new Labyrinth(Properties.Resources.Bludiste1, new Position(1,1));
+            Search.AStarSearch aStar = new Search.AStarSearch(lab, new Position(7, 3));
+            Stack<Search.AStarNode> path = aStar.SearchPath(out int iteration);
             Console.WriteLine(iteration);
             WritePath(path);
             Console.OutputEncoding = Encoding.UTF8;
-            Console.WriteLine(l.ToString());
+            Console.WriteLine(lab.ToString());
             Console.ReadKey();
         }
     }

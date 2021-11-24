@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LabyrinthFindingPath
 {
-    class LabyrinthException : Exception
+    public class LabyrinthException : Exception
     {
         public LabyrinthException(string message) : base(message) { }
     }
