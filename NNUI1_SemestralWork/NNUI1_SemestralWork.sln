@@ -10,6 +10,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabyrinthFindingPathTests",
 		{4BB49AE7-E91F-475D-955E-A4490CEB4468} = {4BB49AE7-E91F-475D-955E-A4490CEB4468}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabyrinthGUI", "LabyrinthGUI\LabyrinthGUI.csproj", "{95877B5B-FE32-4651-87D7-382627900D9D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4BB49AE7-E91F-475D-955E-A4490CEB4468} = {4BB49AE7-E91F-475D-955E-A4490CEB4468}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +29,10 @@ Global
 		{4D110415-CB09-4094-A42A-163FC975FA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D110415-CB09-4094-A42A-163FC975FA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D110415-CB09-4094-A42A-163FC975FA7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95877B5B-FE32-4651-87D7-382627900D9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95877B5B-FE32-4651-87D7-382627900D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95877B5B-FE32-4651-87D7-382627900D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95877B5B-FE32-4651-87D7-382627900D9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

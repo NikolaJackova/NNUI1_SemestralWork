@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LabyrinthFindingPath.Search
+﻿namespace LabyrinthFindingPath.Search
 {
-    class AStarNode
+    public class AStarNode
     {
         private static int id = 1;
         public int Id { get; }

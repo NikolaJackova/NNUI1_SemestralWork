@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace LabyrinthFindingPath.Search
 {
-    class AStarSearch
+    public class AStarSearch
     {
         public Labyrinth Labyrinth { get; }
         public Position StartPositioin { get; set; }
