@@ -2,15 +2,12 @@
 using LabyrinthFindingPath.Search;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace LabyrinthGUI
 {
@@ -32,10 +29,10 @@ namespace LabyrinthGUI
         private void ButtonFindPath_Click(object sender, RoutedEventArgs e)
         {
             FindingPath.SetSearch(StartPoint, EndPoint);
+            FindingPath.Labyrinth.Agent.ChangePosition += ColorPath;
             try
             {
                 FindingPath.Search();
-                ColorPath();
             }
             catch (SearchException exception)
             {
@@ -44,7 +41,55 @@ namespace LabyrinthGUI
             }
         }
 
-        private void ColorPath()
+        private void ColorPath(object sender, EventArgs e)
+        {
+            Position item = FindingPath.Labyrinth.Agent.Position;
+            if (item != null)
+            {
+                int x = item.Column;
+                int y = item.Row;
+
+                Rectangle point = new Rectangle
+                {
+                    Width = 1,
+                    Height = 1
+                };
+                LinearGradientBrush gradientFillRectangle = new LinearGradientBrush();
+                gradientFillRectangle.StartPoint = new Point(0, 0.5);
+                gradientFillRectangle.EndPoint = new Point(1, 0.5);
+                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Yellow, 0.0));
+                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Blue, 0.50));
+                point.Fill = gradientFillRectangle;
+                double centerX = point.Width / 2;
+                double centerY = point.Height / 2;
+                switch (item.Direction)
+                {
+                    case Direction.NORTH:
+                        RotateTransform up = new RotateTransform(0, centerX, centerY);
+                        point.RenderTransform = up;
+                        break;
+                    case Direction.WEST:
+                        RotateTransform left = new RotateTransform(-90, centerX, centerY);
+                        point.RenderTransform = left;
+                        break;
+                    case Direction.SOUTH:
+                        RotateTransform down = new RotateTransform(180, centerX, centerY);
+                        point.RenderTransform = down;
+                        break;
+                    case Direction.EAST:
+                        RotateTransform right = new RotateTransform(90, centerX, centerY);
+                        point.RenderTransform = right;
+                        break;
+                    default:
+                        break;
+                }
+                Canvas.SetLeft(point, x);
+                Canvas.SetTop(point, y);
+                canvas.Children.Add(point);
+            }
+
+        }
+        /*private void ColorPath()
         {
             DispatcherTimer drawingTimer = new DispatcherTimer();
             drawingTimer.Tick += new EventHandler(DrawingTimer_Tick);
@@ -65,13 +110,13 @@ namespace LabyrinthGUI
                     Width = 1,
                     Height = 1
                 };
-                /*LinearGradientBrush gradientFillRectangle = new LinearGradientBrush();
+                LinearGradientBrush gradientFillRectangle = new LinearGradientBrush();
                 gradientFillRectangle.StartPoint = new Point(0, 0.5);
                 gradientFillRectangle.EndPoint = new Point(1, 0.5);
                 gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Yellow, 0.0));
                 gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Red, 0.25));
                 gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Blue, 0.75));
-                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.LimeGreen, 1.0));*/
+                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.LimeGreen, 1.0));
                 point.Fill = Brushes.Red;
                 Canvas.SetLeft(point, x);
                 Canvas.SetTop(point, y);
@@ -81,7 +126,7 @@ namespace LabyrinthGUI
             {
                 ((DispatcherTimer)sender).Stop();
             }
-        }
+        }*/
 
         private void MenuItemOpen_Click(object sender, RoutedEventArgs e)
         {
@@ -161,6 +206,10 @@ namespace LabyrinthGUI
             canvas.Children.Add(EndPoint.POI);
         }
 
+        private void MenuItemExport_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
         private void MenuItemExit_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);

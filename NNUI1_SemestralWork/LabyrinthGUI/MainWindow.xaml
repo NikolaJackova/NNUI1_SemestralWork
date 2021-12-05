@@ -11,6 +11,8 @@
             <MenuItem Header="_File">
                 <MenuItem Name="MenuItemOpen" Header="_Open" Click="MenuItemOpen_Click"/>
                 <Separator />
+                <MenuItem Name="MenuItemExport" Header="_Export" Click="MenuItemExport_Click"/>
+                <Separator />
                 <MenuItem Name="MenuItemExit" Header="_Exit" Click="MenuItemExit_Click"/>
             </MenuItem>
         </Menu>

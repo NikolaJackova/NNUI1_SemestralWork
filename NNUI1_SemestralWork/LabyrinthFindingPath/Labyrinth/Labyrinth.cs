@@ -8,14 +8,16 @@ using System.Threading.Tasks;
 
 namespace LabyrinthFindingPath
 {
+    public delegate void ApplyActionOnAgentDelegate(Position position);
     public class Labyrinth
     {
+        public ApplyActionOnAgentDelegate ApplyAction { get; set; }
         private LoaderLabyrinth LoaderLabyrinth { get; }
         public bool[,] LabyrinthMap { get; }
         public int Rows { get; private set; }
         public int Columns { get; private set; }
         public Agent Agent { get; set; }
-        public AStarSearch AStarSearch {get; set;}
+        public AStarSearch AStarSearch { get; set; }
         public Labyrinth(Bitmap image)
         {
             LoaderLabyrinth = new LoaderLabyrinth(image);
