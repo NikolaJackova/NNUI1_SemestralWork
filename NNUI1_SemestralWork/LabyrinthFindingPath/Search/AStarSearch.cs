@@ -14,14 +14,16 @@ namespace LabyrinthFindingPath.Search
         private SimplePriorityQueue<AStarNode> Fringe { get; }
         private IList<AStarNode> Explored { get; }
 
-        public AStarSearch(Labyrinth labyrinth, Position finalPosition)
+        public AStarSearch(Labyrinth labyrinth, Position startPosition, Position finalPosition)
         {
+            Labyrinth = labyrinth;
+            Labyrinth.CheckValidPosition(startPosition.Row, startPosition.Column);
+            Labyrinth.CheckValidPosition(finalPosition.Row, finalPosition.Column);
             AStarSystemActionProcessor = new SearchActionProcessor(labyrinth);
             Fringe = new SimplePriorityQueue<AStarNode>();
             Explored = new List<AStarNode>();
-            StartPositioin = labyrinth.Agent.Position;
+            StartPositioin = startPosition;
             FinalPosition = finalPosition;
-            Labyrinth = labyrinth;
         }
         public Stack<AStarNode> SearchPath(out int iteration)
         {
@@ -37,20 +39,14 @@ namespace LabyrinthFindingPath.Search
                     node.PathEval = EvaluateWithHeuristic(node.Position);
                     Stack<AStarNode> aStarNodePath = new Stack<AStarNode>();
                     ReconstructPath(node, aStarNodePath);
-                    ApplyPathOnAgent(aStarNodePath);
+                    Labyrinth.ApplyPathOnAgent(aStarNodePath);
                     return aStarNodePath;
                 }
                 iteration++;
             }
             throw new SearchException("Unreachable position!");
         }
-        private void ApplyPathOnAgent(Stack<AStarNode> aStarNodePath)
-        {
-            foreach (var item in aStarNodePath)
-            {
-                Labyrinth.Agent.Position = item.Position;
-            }
-        }
+
         private void ProcessChildrenNodes(IList<AStarNode> children)
         {
             foreach (var childNode in children)
@@ -68,7 +64,6 @@ namespace LabyrinthFindingPath.Search
         }
         private void ReconstructPath(AStarNode node, Stack<AStarNode> path)
         {
-            Labyrinth.Agent.Position = node.Position;
             path.Push(node);
             if (node.Parent == null)
             {

@@ -11,13 +11,17 @@
             <MenuItem Header="_File">
                 <MenuItem Name="MenuItemOpen" Header="_Open" Click="MenuItemOpen_Click"/>
                 <Separator />
-                <MenuItem Header="_Exit" />
+                <MenuItem Name="MenuItemExit" Header="_Exit" Click="MenuItemExit_Click"/>
             </MenuItem>
         </Menu>
         <Grid DockPanel.Dock="Left" Margin="0,0.4,0,0" Width="200" Background="#C21C0E">
-            <Button Name="ButtonFindPath" Content="Find path" Margin="30,0,30,77" Height="23" VerticalAlignment="Bottom" Click="ButtonFindPath_Click"/>
+            <Button Name="ButtonFindPath" Content="Find path" Margin="30,40,30,0" Height="23" VerticalAlignment="Top" Click="ButtonFindPath_Click"/>
         </Grid>
-        <Canvas Name="Canvas">
-        </Canvas>
+        <Viewbox>
+            <Grid Name="gridForImage">
+                <Canvas Name="canvas" >
+                </Canvas>
+            </Grid>
+        </Viewbox>
     </DockPanel>
 </Window>

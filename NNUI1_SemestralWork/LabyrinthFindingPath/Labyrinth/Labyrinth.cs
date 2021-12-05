@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LabyrinthFindingPath.Search;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -14,11 +15,20 @@ namespace LabyrinthFindingPath
         public int Rows { get; private set; }
         public int Columns { get; private set; }
         public Agent Agent { get; set; }
-        public Labyrinth(Bitmap image, Position startPosition)
+        public AStarSearch AStarSearch {get; set;}
+        public Labyrinth(Bitmap image)
         {
             LoaderLabyrinth = new LoaderLabyrinth(image);
             LabyrinthMap = LoaderLabyrinth.LoadLabyrinth();
-            SetAttributes(startPosition);
+            Rows = LabyrinthMap.GetLength(0);
+            Columns = LabyrinthMap.GetLength(1);
+        }
+        public void CheckValidPosition(int row, int column)
+        {
+            if (!LabyrinthMap[row, column])
+            {
+                throw new LabyrinthException("Start or destination position is not valid position!");
+            }
         }
         public override string ToString()
         {
@@ -33,20 +43,12 @@ namespace LabyrinthFindingPath
             }
             return builder.ToString();
         }
-        private void SetAttributes(Position startPosition)
+        public void ApplyPathOnAgent(Stack<AStarNode> aStarNodePath)
         {
-            if (!CheckValidPosition(startPosition))
+            foreach (var item in aStarNodePath)
             {
-                throw new LabyrinthException("Start or destination position is not valid position!");
+                Agent.Position = item.Position;
             }
-            Agent = new Agent(startPosition);
-            Rows = LabyrinthMap.GetLength(0);
-            Columns = LabyrinthMap.GetLength(1);
-        }
-
-        private bool CheckValidPosition(Position position)
-        {
-            return LabyrinthMap[position.Row, position.Column] != false;
         }
     }
 }
