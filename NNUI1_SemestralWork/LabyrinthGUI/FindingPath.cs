@@ -3,6 +3,7 @@ using LabyrinthFindingPath.Search;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,11 +30,12 @@ namespace LabyrinthGUI
         }
         public AStarNode GetPathItem()
         {
-            if (CopyPath.Count==0)
+            if (CopyPath.Count == 0)
             {
                 CopyPath = Path;
                 return null;
-            } else
+            }
+            else
             {
                 return CopyPath.Pop();
             }
@@ -44,10 +46,21 @@ namespace LabyrinthGUI
             CopyPath = Path;
             Iteration = iteration;
         }
-
-        public void CheckValidPosition(int row, int column)
+        public bool CheckValidPosition(int row, int column)
         {
-            Labyrinth.CheckValidPosition(row, column);
+            return Labyrinth.CheckValidPosition(row, column);
+        }
+        public void ExportPath()
+        {
+            if (Path == null)
+            {
+                throw new NullReferenceException("Path cannot be null for an export!");
+            }
+            using (StreamWriter outputFile = new StreamWriter("Path.txt"))
+            {
+                foreach (var item in Path)
+                    outputFile.WriteLine(item.ToString());
+            }
         }
     }
 }

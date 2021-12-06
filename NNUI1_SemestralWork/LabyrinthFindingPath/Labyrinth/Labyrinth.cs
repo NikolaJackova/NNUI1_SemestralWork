@@ -25,12 +25,10 @@ namespace LabyrinthFindingPath
             Rows = LabyrinthMap.GetLength(0);
             Columns = LabyrinthMap.GetLength(1);
         }
-        public void CheckValidPosition(int row, int column)
+        public bool CheckValidPosition(int row, int column)
         {
-            if (!LabyrinthMap[row, column])
-            {
-                throw new LabyrinthException("Start or destination position is not valid position!");
-            }
+            return LabyrinthMap[row, column];
+            
         }
         public override string ToString()
         {

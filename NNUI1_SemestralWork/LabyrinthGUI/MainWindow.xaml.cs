@@ -17,119 +17,30 @@ namespace LabyrinthGUI
     public partial class MainWindow : Window
     {
         public FindingPath FindingPath { get; set; }
-        public PointOfInterest StartPoint { get; set; }
-        public PointOfInterest EndPoint { get; set; }
+        private GuiUtility GuiUtility { get; set; }
 
+        #region Initialization
         public MainWindow()
         {
             InitializeComponent();
+            InitializeAttributes();
+        }
+
+        private void InitializeAttributes()
+        {
             RenderOptions.SetBitmapScalingMode(gridForImage, BitmapScalingMode.NearestNeighbor);
-            Panel.SetZIndex(canvas, 10);
+            Panel.SetZIndex(canvas, 5);
+            ButtonFindPath.IsEnabled = false;
+            GuiUtility = new GuiUtility(Brushes.Yellow, Brushes.Blue);
         }
-        private void ButtonFindPath_Click(object sender, RoutedEventArgs e)
-        {
-            FindingPath.SetSearch(StartPoint, EndPoint);
-            FindingPath.Labyrinth.Agent.ChangePosition += ColorPath;
-            try
-            {
-                FindingPath.Search();
-            }
-            catch (SearchException exception)
-            {
-                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-        }
+        #endregion
 
-        private void ColorPath(object sender, EventArgs e)
-        {
-            Position item = FindingPath.Labyrinth.Agent.Position;
-            if (item != null)
-            {
-                int x = item.Column;
-                int y = item.Row;
-
-                Rectangle point = new Rectangle
-                {
-                    Width = 1,
-                    Height = 1
-                };
-                LinearGradientBrush gradientFillRectangle = new LinearGradientBrush();
-                gradientFillRectangle.StartPoint = new Point(0, 0.5);
-                gradientFillRectangle.EndPoint = new Point(1, 0.5);
-                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Yellow, 0.0));
-                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Blue, 0.50));
-                point.Fill = gradientFillRectangle;
-                double centerX = point.Width / 2;
-                double centerY = point.Height / 2;
-                switch (item.Direction)
-                {
-                    case Direction.NORTH:
-                        RotateTransform up = new RotateTransform(0, centerX, centerY);
-                        point.RenderTransform = up;
-                        break;
-                    case Direction.WEST:
-                        RotateTransform left = new RotateTransform(-90, centerX, centerY);
-                        point.RenderTransform = left;
-                        break;
-                    case Direction.SOUTH:
-                        RotateTransform down = new RotateTransform(180, centerX, centerY);
-                        point.RenderTransform = down;
-                        break;
-                    case Direction.EAST:
-                        RotateTransform right = new RotateTransform(90, centerX, centerY);
-                        point.RenderTransform = right;
-                        break;
-                    default:
-                        break;
-                }
-                Canvas.SetLeft(point, x);
-                Canvas.SetTop(point, y);
-                canvas.Children.Add(point);
-            }
-
-        }
-        /*private void ColorPath()
-        {
-            DispatcherTimer drawingTimer = new DispatcherTimer();
-            drawingTimer.Tick += new EventHandler(DrawingTimer_Tick);
-            drawingTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            drawingTimer.Start();
-        }
-
-        private void DrawingTimer_Tick(object sender, EventArgs e)
-        {
-            AStarNode item = FindingPath.GetPathItem();
-            if (item != null)
-            {
-                int x = item.Position.Column;
-                int y = item.Position.Row;
-
-                Rectangle point = new Rectangle
-                {
-                    Width = 1,
-                    Height = 1
-                };
-                LinearGradientBrush gradientFillRectangle = new LinearGradientBrush();
-                gradientFillRectangle.StartPoint = new Point(0, 0.5);
-                gradientFillRectangle.EndPoint = new Point(1, 0.5);
-                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Yellow, 0.0));
-                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Red, 0.25));
-                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Blue, 0.75));
-                gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.LimeGreen, 1.0));
-                point.Fill = Brushes.Red;
-                Canvas.SetLeft(point, x);
-                Canvas.SetTop(point, y);
-                canvas.Children.Add(point);
-            }
-            else
-            {
-                ((DispatcherTimer)sender).Stop();
-            }
-        }*/
-
+        #region Window Actions
         private void MenuItemOpen_Click(object sender, RoutedEventArgs e)
         {
+            canvas.Children.Clear();
+            GuiUtility.DeletePoints();
+            ButtonFindPath.IsEnabled = false;
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "Image files (*.png;*.bmp)|*.png;*.bmp"
@@ -146,73 +57,117 @@ namespace LabyrinthGUI
                 image.MouseLeftButtonDown += Image_LeftMouseDown;
                 image.MouseRightButtonDown += Image_RightMouseDown;
                 gridForImage.Children.Add(image);
+
                 FindingPath = new FindingPath(new System.Drawing.Bitmap(fileName));
             }
         }
+        private void MenuItemExport_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                FindingPath?.ExportPath();
+            }
+            catch (NullReferenceException exception)
+            {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void MenuItemExit_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+        private void ButtonFindPath_Click(object sender, RoutedEventArgs e)
+        {
+            FindingPath.SetSearch(GuiUtility.StartPoint, GuiUtility.EndPoint);
+            FindingPath.Labyrinth.Agent.ChangePosition += ColorPath;
+            try
+            {
+                FindingPath.Search();
+            }
+            catch (SearchException exception)
+            {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Event Handlers
         private void Image_LeftMouseDown(object sender, MouseButtonEventArgs e)
         {
             Point position = e.GetPosition((IInputElement)sender);
             int row = (int)position.Y;
             int column = (int)position.X;
-            try
+            if (!FindingPath.CheckValidPosition(row, column))
             {
-                FindingPath.CheckValidPosition(row, column);
-            }
-            catch (LabyrinthException exception)
-            {
-                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Start position is not valid position!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (StartPoint != null)
-            {
-                canvas.Children.Remove(StartPoint.POI);
-            }
-            StartPoint = new PointOfInterest(new Rectangle
-            {
-                Width = 1,
-                Height = 1,
-                Fill = Brushes.Red
-            }, row, column);
-            Canvas.SetLeft(StartPoint.POI, column);
-            Canvas.SetTop(StartPoint.POI, row);
-            canvas.Children.Add(StartPoint.POI);
+            SetStartPoint(row, column);
+            EnableButton();
+            ClearCanvasPath();
         }
         private void Image_RightMouseDown(object sender, MouseButtonEventArgs e)
         {
             Point position = e.GetPosition((IInputElement)sender);
             int row = (int)position.Y;
             int column = (int)position.X;
-            try
+            if (!FindingPath.CheckValidPosition(row, column))
             {
-                FindingPath.CheckValidPosition(row, column);
-            }
-            catch (LabyrinthException exception)
-            {
-                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Destination position is not valid position!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (EndPoint != null)
+            SetEndPoint(row, column);
+            EnableButton();
+            ClearCanvasPath();
+        }
+        private void ColorPath(object sender, EventArgs e)
+        {
+            Position item = FindingPath.Labyrinth.Agent.Position;
+            if (item != null)
             {
-                canvas.Children.Remove(EndPoint.POI);
+                int x = item.Column;
+                int y = item.Row;
+
+                Rectangle rectangle = GuiUtility.CreateRectangle(item.Direction);
+
+                Canvas.SetLeft(rectangle, x);
+                Canvas.SetTop(rectangle, y);
+                canvas.Children.Add(rectangle);
             }
-            EndPoint = new PointOfInterest(new Rectangle
+        }
+        #endregion
+
+        private void SetStartPoint(int row, int column)
+        {
+            canvas.Children.Remove(GuiUtility.StartPoint?.POI);
+            GuiUtility.SetStartPoint(row, column);
+            Panel.SetZIndex(GuiUtility.StartPoint.POI, 10);
+            Canvas.SetLeft(GuiUtility.StartPoint.POI, column);
+            Canvas.SetTop(GuiUtility.StartPoint.POI, row);
+            canvas.Children.Add(GuiUtility.StartPoint.POI);
+        }
+        private void SetEndPoint(int row, int column)
+        {
+            canvas.Children.Remove(GuiUtility.EndPoint?.POI);
+            GuiUtility.SetEndPoint(row, column);
+            Panel.SetZIndex(GuiUtility.EndPoint.POI, 10);
+            Canvas.SetLeft(GuiUtility.EndPoint.POI, column);
+            Canvas.SetTop(GuiUtility.EndPoint.POI, row);
+            canvas.Children.Add(GuiUtility.EndPoint.POI);
+        }
+        private void ClearCanvasPath()
+        {
+            foreach (var item in GuiUtility.RectanglePath)
             {
-                Width = 1,
-                Height = 1,
-                Fill = Brushes.Green
-            }, row, column);
-            Canvas.SetLeft(EndPoint.POI, column);
-            Canvas.SetTop(EndPoint.POI, row);
-            canvas.Children.Add(EndPoint.POI);
+                canvas.Children.Remove(item);
+            }
         }
-
-        private void MenuItemExport_Click(object sender, RoutedEventArgs e)
+        private void EnableButton()
         {
-
-        }
-        private void MenuItemExit_Click(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
+            if (canvas.Children.Contains(GuiUtility.StartPoint?.POI) && canvas.Children.Contains(GuiUtility.EndPoint?.POI))
+            {
+                ButtonFindPath.IsEnabled = true;
+            }
         }
     }
 }

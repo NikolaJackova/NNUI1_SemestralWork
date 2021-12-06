@@ -17,8 +17,10 @@ namespace LabyrinthFindingPath.Search
         public AStarSearch(Labyrinth labyrinth, Position startPosition, Position finalPosition)
         {
             Labyrinth = labyrinth;
-            Labyrinth.CheckValidPosition(startPosition.Row, startPosition.Column);
-            Labyrinth.CheckValidPosition(finalPosition.Row, finalPosition.Column);
+            if (!CheckValidStartAndEndPoint(startPosition, finalPosition))
+            {
+                throw new LabyrinthException("Start or destination position is not valid position!");
+            }
             AStarSystemActionProcessor = new SearchActionProcessor(labyrinth);
             Fringe = new SimplePriorityQueue<AStarNode>();
             Explored = new List<AStarNode>();
@@ -46,7 +48,6 @@ namespace LabyrinthFindingPath.Search
             }
             throw new SearchException("Unreachable position!");
         }
-
         private void ProcessChildrenNodes(IList<AStarNode> children)
         {
             foreach (var childNode in children)
@@ -70,6 +71,10 @@ namespace LabyrinthFindingPath.Search
                 return;
             }
             ReconstructPath(node.Parent, path);
+        }
+        private bool CheckValidStartAndEndPoint(Position startPosition, Position finalPosition)
+        {
+            return Labyrinth.CheckValidPosition(startPosition.Row, startPosition.Column) && Labyrinth.CheckValidPosition(finalPosition.Row, finalPosition.Column);
         }
     }
 }

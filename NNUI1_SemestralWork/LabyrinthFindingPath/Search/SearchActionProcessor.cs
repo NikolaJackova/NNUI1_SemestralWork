@@ -55,14 +55,17 @@ namespace LabyrinthFindingPath.Search
                 case Action.ROTATE_90_LEFT:
                     node.Position.Rotate90DegreesLeft();
                     node.PathCost += Agent.CostOfRotate90;
+                    node.Position.StepForward();
                     break;
                 case Action.ROTATE_90_RIGHT:
                     node.Position.Rotate90DegreesRight();
                     node.PathCost += Agent.CostOfRotate90;
+                    node.Position.StepForward();
                     break;
                 case Action.ROTATE_180:
                     node.Position.Rotate180Degrees();
                     node.PathCost += Agent.CostOfRotate180;
+                    node.Position.StepForward();
                     break;
                 case Action.STEP_FORWARD:
                     node.Position.StepForward();
@@ -78,19 +81,19 @@ namespace LabyrinthFindingPath.Search
             switch (position.Direction)
             {
                 case Direction.NORTH:
-                    if (position.Row-1 >=0)
+                    if (position.Row - 1 >= 0)
                     {
                         return Labyrinth.LabyrinthMap[position.Row - 1, position.Column];
                     }
                     break;
                 case Direction.EAST:
-                    if (position.Column+1<Labyrinth.Columns)
+                    if (position.Column + 1 < Labyrinth.Columns)
                     {
                         return Labyrinth.LabyrinthMap[position.Row, position.Column + 1];
                     }
                     break;
                 case Direction.SOUTH:
-                    if (position.Row+1<Labyrinth.Rows)
+                    if (position.Row + 1 < Labyrinth.Rows)
                     {
                         return Labyrinth.LabyrinthMap[position.Row + 1, position.Column];
                     }
