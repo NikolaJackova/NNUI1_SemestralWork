@@ -17,6 +17,7 @@ namespace LabyrinthFindingPath.Search
         public AStarSearch(Labyrinth labyrinth, Position startPosition, Position finalPosition)
         {
             Labyrinth = labyrinth;
+            Labyrinth.Agent = new Agent(startPosition);
             if (!CheckValidStartAndEndPoint(startPosition, finalPosition))
             {
                 throw new LabyrinthException("Start or destination position is not valid position!");

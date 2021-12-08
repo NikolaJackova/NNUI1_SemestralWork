@@ -26,7 +26,6 @@ namespace LabyrinthGUI
         {
             Position startPosition = new Position(start.Row, start.Column);
             Position endPosition = new Position(end.Row, end.Column);
-            Labyrinth.Agent = new Agent(startPosition);
             AStarSearch = new AStarSearch(Labyrinth, startPosition, endPosition);
         }
         public AStarNode GetPathItem()
