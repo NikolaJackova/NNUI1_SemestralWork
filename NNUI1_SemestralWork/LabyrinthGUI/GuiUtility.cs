@@ -92,8 +92,8 @@ namespace LabyrinthGUI
                 StartPoint = new Point(0, 0.5),
                 EndPoint = new Point(1, 0.5)
             };
-            gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Green, 0));
-            gradientFillRectangle.GradientStops.Add(new GradientStop(Colors.Red, 1));
+            gradientFillRectangle.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#44744A"), 0));
+            gradientFillRectangle.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#CDA365"), 1));
             return gradientFillRectangle;
         }
     }

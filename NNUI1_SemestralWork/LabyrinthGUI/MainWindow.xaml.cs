@@ -25,13 +25,13 @@ namespace LabyrinthGUI
             InitializeComponent();
             InitializeAttributes();
         }
-
         private void InitializeAttributes()
         {
             RenderOptions.SetBitmapScalingMode(gridForImage, BitmapScalingMode.NearestNeighbor);
             Panel.SetZIndex(canvas, 5);
             ButtonFindPath.IsEnabled = false;
-            GuiUtility = new GuiUtility(Brushes.Yellow, Brushes.Blue);
+            MenuItemExport.IsEnabled = false;
+            GuiUtility = new GuiUtility((SolidColorBrush)new BrushConverter().ConvertFrom("#538D5B"), (SolidColorBrush)new BrushConverter().ConvertFrom("#F97D10"));
         }
         #endregion
 
@@ -40,7 +40,9 @@ namespace LabyrinthGUI
         {
             canvas.Children.Clear();
             GuiUtility.DeletePoints();
+            ClearLabels();
             ButtonFindPath.IsEnabled = false;
+            MenuItemExport.IsEnabled = false;
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "Image files (*.png;*.bmp)|*.png;*.bmp"
@@ -58,6 +60,8 @@ namespace LabyrinthGUI
                 image.MouseRightButtonDown += Image_RightMouseDown;
                 gridForImage.Children.Add(image);
 
+                gridForImage.Width = image.Source.Width;
+                gridForImage.Height = image.Source.Height;
                 FindingPath = new FindingPath(new System.Drawing.Bitmap(fileName));
             }
         }
@@ -83,6 +87,9 @@ namespace LabyrinthGUI
             try
             {
                 FindingPath.Search();
+                labelTotalIteration.Content = FindingPath.Iteration;
+                labelPathCost.Content = FindingPath.Path.ToArray()[FindingPath.Path.Count - 1].PathTotal;
+                MenuItemExport.IsEnabled = true;
             }
             catch (SearchException exception)
             {
@@ -144,6 +151,7 @@ namespace LabyrinthGUI
             Panel.SetZIndex(GuiUtility.StartPoint.POI, 10);
             Canvas.SetLeft(GuiUtility.StartPoint.POI, column);
             Canvas.SetTop(GuiUtility.StartPoint.POI, row);
+            labelStartPosition.Content = "[" + row + "," + column + "]";
             canvas.Children.Add(GuiUtility.StartPoint.POI);
         }
         private void SetEndPoint(int row, int column)
@@ -153,6 +161,7 @@ namespace LabyrinthGUI
             Panel.SetZIndex(GuiUtility.EndPoint.POI, 10);
             Canvas.SetLeft(GuiUtility.EndPoint.POI, column);
             Canvas.SetTop(GuiUtility.EndPoint.POI, row);
+            labelEndPosition.Content = "[" + row + "," + column + "]";
             canvas.Children.Add(GuiUtility.EndPoint.POI);
         }
         private void ClearCanvasPath()
@@ -168,6 +177,13 @@ namespace LabyrinthGUI
             {
                 ButtonFindPath.IsEnabled = true;
             }
+        }
+        private void ClearLabels()
+        {
+            labelEndPosition.Content = "";
+            labelStartPosition.Content = "";
+            labelPathCost.Content = "";
+            labelTotalIteration.Content = "";
         }
     }
 }

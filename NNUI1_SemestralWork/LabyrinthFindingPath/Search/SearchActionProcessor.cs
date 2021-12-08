@@ -55,25 +55,22 @@ namespace LabyrinthFindingPath.Search
                 case Action.ROTATE_90_LEFT:
                     node.Position.Rotate90DegreesLeft();
                     node.PathCost += Agent.CostOfRotate90;
-                    node.Position.StepForward();
                     break;
                 case Action.ROTATE_90_RIGHT:
                     node.Position.Rotate90DegreesRight();
                     node.PathCost += Agent.CostOfRotate90;
-                    node.Position.StepForward();
                     break;
                 case Action.ROTATE_180:
                     node.Position.Rotate180Degrees();
                     node.PathCost += Agent.CostOfRotate180;
-                    node.Position.StepForward();
                     break;
                 case Action.STEP_FORWARD:
-                    node.Position.StepForward();
-                    node.PathCost += Agent.CostOfStepForward;
                     break;
                 default:
                     throw new SearchException("Unknown action!");
             }
+            node.Position.StepForward();
+            node.PathCost += Agent.CostOfStepForward;
             return node;
         }
         private bool IsStepValidInDirection(Position position)

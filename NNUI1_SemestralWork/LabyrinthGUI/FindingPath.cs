@@ -16,6 +16,7 @@ namespace LabyrinthGUI
         public AStarSearch AStarSearch { get; private set; }
         public Stack<AStarNode> Path { get; private set; }
         public int Iteration { get; private set; }
+        public double PathCost { get; private set; }
         private Stack<AStarNode> CopyPath { get; set; }
         public FindingPath(Bitmap image)
         {

@@ -16,14 +16,28 @@
                 <MenuItem Name="MenuItemExit" Header="_Exit" Click="MenuItemExit_Click"/>
             </MenuItem>
         </Menu>
-        <Grid DockPanel.Dock="Left" Margin="0,0.4,0,0" Width="200" Background="#C21C0E">
+        <Grid DockPanel.Dock="Left" Margin="0,0.4,0,0" Width="200" Background="#44744A">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="136*"/>
+                <RowDefinition Height="65*"/>
+            </Grid.RowDefinitions>
             <Button Name="ButtonFindPath" Content="Find path" Margin="30,40,30,0" Height="23" VerticalAlignment="Top" Click="ButtonFindPath_Click"/>
+            <Label Foreground="#EEE0CB" Content="Start position: " HorizontalAlignment="Left" Margin="30,92,0,0" VerticalAlignment="Top"/>
+            <Label Foreground="#EEE0CB" Content="End position: " HorizontalAlignment="Left" Margin="30,123,0,0" VerticalAlignment="Top"/>
+            <Label Foreground="#EEE0CB" Content="Path cost: " HorizontalAlignment="Left" Margin="30,154,0,0" VerticalAlignment="Top"/>
+            <Label Foreground="#EEE0CB" Content="Total iteration: " HorizontalAlignment="Left" Margin="30,185,0,0" VerticalAlignment="Top"/>
+            <Label Name="labelStartPosition" Foreground="#EEE0CB" HorizontalAlignment="Left" Margin="117,92,0,0" Height="26" VerticalAlignment="Top"/>
+            <Label Name="labelEndPosition" Foreground="#EEE0CB" HorizontalAlignment="Left" Margin="117,123,0,0" VerticalAlignment="Top"/>
+            <Label Name="labelPathCost" Foreground="#EEE0CB" HorizontalAlignment="Left" Margin="117,154,0,0" VerticalAlignment="Top"/>
+            <Label Name="labelTotalIteration" Foreground="#EEE0CB" HorizontalAlignment="Left" Margin="117,185,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Viewbox>
-            <Grid Name="gridForImage">
-                <Canvas Name="canvas" >
-                </Canvas>
-            </Grid>
-        </Viewbox>
+        <Border Background="#EEE0CB">
+            <Viewbox>
+                <Grid Name="gridForImage">
+                    <Canvas Name="canvas" Width="{Binding ActualWidth, ElementName=gridForImage}" Height="{Binding ActualWidth, ElementName=gridForImage}">
+                    </Canvas>
+                </Grid>
+            </Viewbox>
+        </Border>
     </DockPanel>
 </Window>
